@@ -1,13 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styles from './App.module.css';
 
 function App() {
     const [volume, setVolume] = useState(0.5); // Estado para el volumen
+    const [showKeys, setShowKeys] = useState(true); // Estado para mostrar las teclas
+    const audioRef = useRef(new Audio()); // Referencia al objeto Audio
 
     const handlePlayTune = (key) => {
-        const audio = new Audio(`/tunes/${key}.wav`); // Ruta relativa al directorio público
+        const audio = audioRef.current;
+        audio.src = `/tunes/${key}.wav`; // Actualizar la fuente del audio
         audio.volume = volume; // Establecer el volumen
-        audio.play();
+        // Detener la reproducción actual y reiniciar con el nuevo audio
+        audio.pause();
+        audio.currentTime = 0; // Reiniciar el audio actual si es necesario
 
         // Lógica para resaltar la tecla presionada
         const clickedKey = document.querySelector(`[data-key="${key}"]`);
@@ -17,23 +22,36 @@ function App() {
                 clickedKey.classList.remove(styles.active);
             }, 150);
         }
+
+        // Reproducir audio con una pequeña pausa para ajustar el volumen
+        setTimeout(() => {
+            audio.play()
+                .catch(error => {
+                    console.error('Error playing audio:', error);
+                });
+        }, 50); // Ajusta este valor según sea necesario para tu caso específico
     };
 
     const handleVolumeChange = (e) => {
-        setVolume(e.target.value); // Actualizar el estado del volumen
+        const vol = parseFloat(e.target.value); // Convertir a número decimal
+        setVolume(vol); // Actualizar el estado del volumen
+    };
+
+    const handleShowKeysChange = (e) => {
+        setShowKeys(e.target.checked); // Actualizar el estado de showKeys
+    };
+
+    const handleKeyDown = (event) => {
+        // Obtener la tecla presionada como string
+        const key = event.key.toLowerCase();
+
+        // Verificar si la tecla presionada corresponde a una nota del piano
+        if (allKeys.includes(key)) {
+            handlePlayTune(key);
+        }
     };
 
     useEffect(() => {
-        const handleKeyDown = (event) => {
-            // Obtener la tecla presionada como string
-            const key = event.key.toLowerCase();
-
-            // Verificar si la tecla presionada corresponde a una nota del piano
-            if (allKeys.includes(key)) {
-                handlePlayTune(key);
-            }
-        };
-
         // Agregar el event listener para detectar las pulsaciones de teclas
         document.addEventListener('keydown', handleKeyDown);
 
@@ -41,8 +59,7 @@ function App() {
         return () => {
             document.removeEventListener('keydown', handleKeyDown);
         };
-    }, []); // El array vacío asegura que este efecto solo se ejecute una vez al montar el componente
-
+    }, []);
 
     // Arreglo de todas las teclas disponibles
     const allKeys = ["a", "w", "s", "e", "d", "f", "t", "g", "y", "h", "u", "j", "k", "o", "l", "p", "m"];
@@ -64,7 +81,11 @@ function App() {
                 </div>
                 <div className={`${styles.column} ${styles['keys-checkbox']}`}>
                     <span>Show Keys</span>
-                    <input type="checkbox" checked/>
+                    <input
+                        type="checkbox"
+                        checked={showKeys}
+                        onChange={handleShowKeysChange}
+                    />
                 </div>
             </header>
             <ul className={styles['piano-keys']}>
@@ -75,7 +96,7 @@ function App() {
                         data-key={key}
                         onClick={() => handlePlayTune(key)}
                     >
-                        <span>{key}</span>
+                        {showKeys && <span>{key}</span>}
                     </li>
                 ))}
             </ul>
