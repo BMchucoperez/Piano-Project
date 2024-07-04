@@ -3,22 +3,13 @@ body {
     align-items: center;
     justify-content: center;
     min-height: 100vh;
-    --s: 76px; /* control the size*/
-    --c1: #68676f;
-    --c2: #af8360;
-    
-    --_g: conic-gradient(var(--c1) 25%,#0000 0) 0 0;
-
-    background: 
-    var(--_g)/calc(2*var(--s)) calc(var(--s)/9.5),
-    var(--_g)/calc(var(--s)/9.5) calc(2*var(--s)),
-    repeating-conic-gradient(#0000 0 25%,var(--c1) 0 50%) 
-    var(--s) 0 /calc(2*var(--s)) calc(2*var(--s)),
-    radial-gradient(50% 50%,var(--c2) 98%,var(--c1)) 
-    0 0/var(--s) var(--s);
+    background-color: #50E3C2;
+    background-image: 
+        radial-gradient(at 47% 33%, hsl(162.00, 77%, 40%) 0, transparent 59%), 
+        radial-gradient(at 82% 65%, hsl(198.00, 100%, 50%) 0, transparent 55%)
 }
 
-*{
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
