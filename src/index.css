@@ -1,9 +1,19 @@
-body{
+body {
     display: flex;
     align-items: center;
     justify-content: center;
     min-height: 100vh;
-    background: #E3F2FD;
+    --s: 76px;
+    --c1: #1a144a;
+    --c2: #af8360;
+    
+    --_g: conic-gradient(var(--c1) 25%,#0000 0) 0 0;
+
+    background: linear-gradient(rgba(198, 202, 205, 0.5), rgba(198,202,205,0.5)),
+        var(--_g) / calc(2 * var(--s)) calc(var(--s) / 9.5),
+        var(--_g) / calc(var(--s) / 9.5) calc(2 * var(--s)),
+        repeating-conic-gradient(#0000 0 25%, var(--c1) 0 50%) var(--s) 0 / calc(2 * var(--s)) calc(2 * var(--s)),
+        radial-gradient(50% 50%, var(--c2) 98%, var(--c1)) 0 0 / var(--s) var(--s);
 }
 
 *{

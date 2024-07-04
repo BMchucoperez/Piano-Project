@@ -29,7 +29,7 @@ function App() {
                 .catch(error => {
                     console.error('Error playing audio:', error);
                 });
-        }, 50); // Ajusta este valor según sea necesario para tu caso específico
+        }, 50); // Ajusta este valor según sea necesario
     };
 
     const handleVolumeChange = (e) => {
